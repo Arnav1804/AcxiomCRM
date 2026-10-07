@@ -1,0 +1,12 @@
+@model AxciomCRM.Models.FollowUp
+@{ ViewData["Title"] = "Schedule Follow-Up"; var customers = ViewBag.Customers as List<Customer> ?? new List<Customer>(); var leads = ViewBag.Leads as List<Lead> ?? new List<Lead>(); var statuses = ViewBag.Statuses as string[] ?? AppConstants.FollowUpStatuses; var types = ViewBag.Types as string[] ?? AppConstants.ActivityTypes; }
+<h1>Schedule Follow-Up</h1>
+<form asp-action="Schedule" method="post"><div asp-validation-summary="ModelOnly" class="text-danger"></div><div class="row">
+    <div class="col-md-6 mb-3"><label asp-for="FollowUpDate" class="form-label"></label><input asp-for="FollowUpDate" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" /><span asp-validation-for="FollowUpDate" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="FollowUpType" class="form-label"></label><select asp-for="FollowUpType" class="form-select"><option value="">Select type</option>@foreach (var type in types) { <option value="@type" selected="@(Model.FollowUpType == type)">@type</option> }</select><span asp-validation-for="FollowUpType" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="CustomerId" class="form-label">Customer</label><select asp-for="CustomerId" class="form-select"><option value="">Select customer</option>@foreach (var customer in customers) { <option value="@customer.CustomerId" selected="@(Model.CustomerId == customer.CustomerId)">@customer.CustomerName</option> }</select></div>
+    <div class="col-md-6 mb-3"><label asp-for="LeadId" class="form-label">Lead</label><select asp-for="LeadId" class="form-select"><option value="">Select lead</option>@foreach (var lead in leads) { <option value="@lead.LeadId" selected="@(Model.LeadId == lead.LeadId)">@lead.LeadName</option> }</select></div>
+    <div class="col-md-6 mb-3"><label asp-for="Status" class="form-label"></label><select asp-for="Status" class="form-select">@foreach (var status in statuses) { <option value="@status" selected="@(Model.Status == status)">@status</option> }</select><span asp-validation-for="Status" class="text-danger"></span></div>
+    <div class="col-md-12 mb-3"><label asp-for="Remarks" class="form-label"></label><textarea asp-for="Remarks" class="form-control"></textarea><span asp-validation-for="Remarks" class="text-danger"></span></div>
+</div><button type="submit" class="btn btn-primary">Save</button> <a asp-action="Index" class="btn btn-secondary">Cancel</a></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,12 @@
+@model AxciomCRM.Models.Lead
+@{
+    ViewData["Title"] = "Delete Lead";
+}
+
+<h1>Delete Lead</h1>
+<p>Are you sure you want to delete <strong>@Model.LeadName</strong>?</p>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="LeadId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

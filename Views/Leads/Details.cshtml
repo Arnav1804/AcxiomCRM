@@ -1,0 +1,22 @@
+@model AxciomCRM.Models.Lead
+@{
+    ViewData["Title"] = "Lead Details";
+}
+
+<h1>Lead Details</h1>
+<dl class="row">
+    <dt class="col-sm-3">Code</dt><dd class="col-sm-9">@Model.LeadCode</dd>
+    <dt class="col-sm-3">Name</dt><dd class="col-sm-9">@Model.LeadName</dd>
+    <dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.Email</dd>
+    <dt class="col-sm-3">Phone</dt><dd class="col-sm-9">@Model.Phone</dd>
+    <dt class="col-sm-3">Company</dt><dd class="col-sm-9">@Model.CompanyName</dd>
+    <dt class="col-sm-3">Source</dt><dd class="col-sm-9">@Model.Source</dd>
+    <dt class="col-sm-3">Status</dt><dd class="col-sm-9">@Model.Status</dd>
+    <dt class="col-sm-3">Expected Value</dt><dd class="col-sm-9">@Model.ExpectedValue</dd>
+</dl>
+<a asp-action="Edit" asp-route-id="@Model.LeadId" class="btn btn-primary">Edit</a>
+@if (Model.Status == "Qualified")
+{
+    <form asp-action="Convert" method="post" class="d-inline"><input type="hidden" name="id" value="@Model.LeadId" /><button type="submit" class="btn btn-success">Convert</button></form>
+}
+<a asp-action="Index" class="btn btn-secondary">Back</a>

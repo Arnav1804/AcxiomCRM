@@ -1,0 +1,18 @@
+@model AxciomCRM.ViewModels.AuditLogListViewModel
+@{ ViewData["Title"] = "Audit Log"; }
+<h1>Audit Log</h1>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3"><select name="userId" class="form-select"><option value="">All users</option>@foreach (var user in Model.Users) { <option value="@user.Id" selected="@(Model.UserId == user.Id)">@user.FullName</option> }</select></div>
+    <div class="col-md-2"><select name="action" class="form-select"><option value="">All actions</option>@foreach (var item in Model.Actions) { <option value="@item" selected="@(Model.Action == item)">@item</option> }</select></div>
+    <div class="col-md-2"><input type="date" name="fromDate" value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" class="form-control" /></div>
+    <div class="col-md-2"><input type="date" name="toDate" value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" class="form-control" /></div>
+    <div class="col-md-3"><button type="submit" class="btn btn-outline-primary">Search</button> <a asp-action="Index" class="btn btn-outline-secondary">Clear</a></div>
+</form>
+<table class="table table-bordered table-hover"><thead><tr><th>Date</th><th>User</th><th>Action</th><th>Entity</th><th>Record</th><th>Old Value</th><th>New Value</th><th>IP</th></tr></thead><tbody>
+@foreach (var log in Model.AuditLogs)
+{
+    var user = Model.Users.FirstOrDefault(u => u.Id == log.UserId);
+    <tr><td>@log.CreatedDate</td><td>@(user?.FullName ?? log.UserId)</td><td>@log.Action</td><td>@log.EntityName</td><td>@log.RecordId</td><td>@log.OldValue</td><td>@log.NewValue</td><td>@log.IpAddress</td></tr>
+}
+</tbody></table>
+@if (Model.TotalPages > 1) { <nav><ul class="pagination">@for (var number = 1; number <= Model.TotalPages; number++) { <li class="page-item @(number == Model.Page ? "active" : "")"><a class="page-link" asp-route-userId="@Model.UserId" asp-route-action="@Model.Action" asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")" asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")" asp-route-page="@number">@number</a></li> }</ul></nav> }

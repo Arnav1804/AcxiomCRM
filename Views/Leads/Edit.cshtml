@@ -1,0 +1,13 @@
+@model AxciomCRM.Models.Lead
+@{
+    ViewData["Title"] = "Edit Lead";
+}
+
+<h1>Edit Lead</h1>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="LeadId" />
+    <partial name="_LeadForm" model="Model" />
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

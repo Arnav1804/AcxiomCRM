@@ -1,0 +1,19 @@
+@model AxciomCRM.ViewModels.FollowUpListViewModel
+@{ ViewData["Title"] = "Follow-Ups"; }
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Pending Follow-Ups</h1><a asp-action="Schedule" class="btn btn-primary">Schedule Follow-Up</a></div>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-2"><input type="date" name="date" value="@(Model.Date?.ToString("yyyy-MM-dd"))" class="form-control" /></div>
+    <div class="col-md-2"><select name="status" class="form-select"><option value="">All statuses</option>@foreach (var item in AppConstants.FollowUpStatuses) { <option value="@item" selected="@(Model.Status == item)">@item</option> }</select></div>
+    <div class="col-md-2"><select name="assignedUser" class="form-select"><option value="">All users</option>@foreach (var user in Model.Users) { <option value="@user.Id" selected="@(Model.AssignedUser == user.Id)">@user.FullName</option> }</select></div>
+    <div class="col-md-2"><select name="customerId" class="form-select"><option value="">All customers</option>@foreach (var customer in Model.Customers) { <option value="@customer.CustomerId" selected="@(Model.CustomerId == customer.CustomerId)">@customer.CustomerName</option> }</select></div>
+    <div class="col-md-2"><select name="leadId" class="form-select"><option value="">All leads</option>@foreach (var lead in Model.Leads) { <option value="@lead.LeadId" selected="@(Model.LeadId == lead.LeadId)">@lead.LeadName</option> }</select></div>
+    <div class="col-md-2"><button class="btn btn-outline-primary" type="submit">Search</button> <a asp-action="Index" class="btn btn-outline-secondary">Clear</a></div>
+</form>
+<table class="table table-bordered table-hover"><thead><tr><th>Date</th><th>Type</th><th>Remarks</th><th>Status</th><th>Assigned To</th><th></th></tr></thead><tbody>
+@foreach (var followUp in Model.FollowUps)
+{
+    var user = Model.Users.FirstOrDefault(u => u.Id == followUp.AssignedTo);
+    <tr><td>@followUp.FollowUpDate.ToShortDateString()</td><td>@followUp.FollowUpType</td><td>@followUp.Remarks</td><td>@followUp.Status</td><td>@(user?.FullName ?? followUp.AssignedTo)</td><td>@if (followUp.Status == "Planned") { <form asp-action="Complete" method="post"><input type="hidden" name="id" value="@followUp.FollowUpId" /><button class="btn btn-sm btn-success" type="submit">Complete</button></form> }</td></tr>
+}
+</tbody></table>
+@if (Model.TotalPages > 1) { <nav><ul class="pagination">@for (var number = 1; number <= Model.TotalPages; number++) { <li class="page-item @(number == Model.Page ? "active" : "")"><a class="page-link" asp-route-date="@Model.Date?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-assignedUser="@Model.AssignedUser" asp-route-customerId="@Model.CustomerId" asp-route-leadId="@Model.LeadId" asp-route-page="@number">@number</a></li> }</ul></nav> }

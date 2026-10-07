@@ -1,0 +1,25 @@
+@model AxciomCRM.Models.Opportunity
+@{
+    var customers = ViewBag.Customers as List<Customer> ?? new List<Customer>();
+    var stages = ViewBag.Stages as string[] ?? AppConstants.OpportunityStages;
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row">
+    <div class="col-md-6 mb-3"><label asp-for="OpportunityName" class="form-label"></label><input asp-for="OpportunityName" class="form-control" /><span asp-validation-for="OpportunityName" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="CustomerId" class="form-label">Customer</label><select asp-for="CustomerId" class="form-select"><option value="">Select customer</option>@foreach (var customer in customers) { <option value="@customer.CustomerId" selected="@(Model.CustomerId == customer.CustomerId)">@customer.CustomerName</option> }</select><span asp-validation-for="CustomerId" class="text-danger"></span></div>
+    <div class="col-md-4 mb-3"><label asp-for="Amount" class="form-label"></label><input asp-for="Amount" class="form-control" /><span asp-validation-for="Amount" class="text-danger"></span></div>
+    <div class="col-md-4 mb-3"><label asp-for="Stage" class="form-label"></label><select asp-for="Stage" class="form-select">@foreach (var stage in stages) { <option value="@stage" selected="@(Model.Stage == stage)">@stage</option> }</select><span asp-validation-for="Stage" class="text-danger"></span></div>
+    <div class="col-md-4 mb-3"><label asp-for="Probability" class="form-label"></label><input asp-for="Probability" class="form-control" /><span asp-validation-for="Probability" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="ExpectedCloseDate" class="form-label"></label>
+        @if (Model.Status == "Open" || Model.OpportunityId == 0)
+        {
+            <input asp-for="ExpectedCloseDate" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
+        }
+        else
+        {
+            <input asp-for="ExpectedCloseDate" type="date" class="form-control" />
+        }
+        <span asp-validation-for="ExpectedCloseDate" class="text-danger"></span>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+@model List<AxciomCRM.ViewModels.UserRowViewModel>
+@{ ViewData["Title"] = "Users"; }
+<h1>Users</h1>
+<table class="table table-bordered table-hover"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Active</th><th>Locked Out</th><th></th></tr></thead><tbody>
+@foreach (var user in Model)
+{
+    <tr><td>@user.FullName</td><td>@user.Email</td><td>@user.Role</td><td>@user.IsActive</td><td>@user.IsLockedOut</td><td><a asp-action="Edit" asp-route-id="@user.Id">Edit</a></td></tr>
+}
+</tbody></table>

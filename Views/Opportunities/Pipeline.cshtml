@@ -1,0 +1,10 @@
+@model List<AxciomCRM.ViewModels.PipelineStageViewModel>
+@{ ViewData["Title"] = "Sales Pipeline"; }
+<h1>Sales Pipeline</h1>
+<table class="table table-bordered"><thead><tr><th>Stage</th><th>Open Opportunities</th><th>Total Amount</th></tr></thead><tbody>
+@foreach (var stage in Model)
+{
+    <tr><td>@stage.Stage</td><td>@stage.Count</td><td>@stage.TotalAmount</td></tr>
+}
+</tbody></table>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

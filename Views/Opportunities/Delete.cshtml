@@ -1,0 +1,5 @@
+@model AxciomCRM.Models.Opportunity
+@{ ViewData["Title"] = "Delete Opportunity"; }
+<h1>Delete Opportunity</h1>
+<p>Are you sure you want to delete <strong>@Model.OpportunityName</strong>?</p>
+<form asp-action="Delete" method="post"><input type="hidden" asp-for="OpportunityId" /><button type="submit" class="btn btn-danger">Delete</button> <a asp-action="Index" class="btn btn-secondary">Cancel</a></form>

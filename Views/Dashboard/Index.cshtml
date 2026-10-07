@@ -1,0 +1,197 @@
+@model AxciomCRM.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Dashboard</h2>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Total Customers</h6>
+                <h3 class="card-title text-primary">@Model.TotalCustomers</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Total Leads</h6>
+                <h3 class="card-title text-info">@Model.TotalLeads</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Open Leads</h6>
+                <h3 class="card-title text-warning">@Model.OpenLeads</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Total Opportunities</h6>
+                <h3 class="card-title text-secondary">@Model.TotalOpportunities</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Open Opportunities</h6>
+                <h3 class="card-title text-primary">@Model.OpenOpportunities</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Won Opportunities</h6>
+                <h3 class="card-title text-success">@Model.WonOpportunities</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Lost Opportunities</h6>
+                <h3 class="card-title text-danger">@Model.LostOpportunities</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Total Pipeline Value</h6>
+                <h3 class="card-title text-success">@Model.TotalPipelineValue.ToString("N2")</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <strong>Lead Status</strong>
+            </div>
+            <div class="card-body">
+                <canvas id="leadStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <strong>Opportunity Pipeline by Stage</strong>
+            </div>
+            <div class="card-body">
+                <canvas id="pipelineChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Monthly Sales (Last 6 Months)</strong>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlySalesChart" style="max-height: 320px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const leadStatusLabels = @Html.Raw(ViewBag.LeadStatusLabels);
+        const leadStatusCounts = @Html.Raw(ViewBag.LeadStatusCounts);
+
+        const pipelineStageLabels = @Html.Raw(ViewBag.PipelineStageLabels);
+        const pipelineStageCounts = @Html.Raw(ViewBag.PipelineStageCounts);
+
+        const monthlySalesLabels = @Html.Raw(ViewBag.MonthlySalesLabels);
+        const monthlySalesAmounts = @Html.Raw(ViewBag.MonthlySalesAmounts);
+
+        new Chart(document.getElementById('leadStatusChart'), {
+            type: 'bar',
+            data: {
+                labels: leadStatusLabels,
+                datasets: [{
+                    label: 'Leads',
+                    data: leadStatusCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('pipelineChart'), {
+            type: 'doughnut',
+            data: {
+                labels: pipelineStageLabels,
+                datasets: [{
+                    label: 'Opportunities',
+                    data: pipelineStageCounts,
+                    backgroundColor: [
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(13, 202, 240, 0.8)',
+                        'rgba(13, 110, 253, 0.8)',
+                        'rgba(25, 135, 84, 0.8)',
+                        'rgba(220, 53, 69, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        new Chart(document.getElementById('monthlySalesChart'), {
+            type: 'line',
+            data: {
+                labels: monthlySalesLabels,
+                datasets: [{
+                    label: 'Won Amount',
+                    data: monthlySalesAmounts,
+                    borderColor: 'rgba(25, 135, 84, 1)',
+                    backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

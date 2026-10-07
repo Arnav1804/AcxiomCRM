@@ -1,0 +1,24 @@
+@model AxciomCRM.Models.Lead
+@{
+    var statuses = ViewBag.Statuses as string[] ?? AppConstants.LeadStatuses;
+    var users = ViewBag.SalesUsers as List<ApplicationUser> ?? new List<ApplicationUser>();
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row">
+    <div class="col-md-6 mb-3"><label asp-for="LeadName" class="form-label"></label><input asp-for="LeadName" class="form-control" /><span asp-validation-for="LeadName" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="CompanyName" class="form-label"></label><input asp-for="CompanyName" class="form-control" /><span asp-validation-for="CompanyName" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" /><span asp-validation-for="Email" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="Phone" class="form-label"></label><input asp-for="Phone" class="form-control" /><span asp-validation-for="Phone" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="Source" class="form-label"></label><input asp-for="Source" class="form-control" /><span asp-validation-for="Source" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="ExpectedValue" class="form-label"></label><input asp-for="ExpectedValue" class="form-control" /><span asp-validation-for="ExpectedValue" class="text-danger"></span></div>
+    <div class="col-md-6 mb-3"><label asp-for="Status" class="form-label"></label><select asp-for="Status" class="form-select">@foreach (var status in statuses) { <option value="@status" selected="@(Model.Status == status)">@status</option> }</select><span asp-validation-for="Status" class="text-danger"></span></div>
+    @if (User.IsInRole(AppConstants.SalesExecutive))
+    {
+        <input type="hidden" asp-for="AssignedTo" />
+    }
+    else
+    {
+        <div class="col-md-6 mb-3"><label asp-for="AssignedTo" class="form-label">Assigned User</label><select asp-for="AssignedTo" class="form-select"><option value="">Select user</option>@foreach (var user in users) { <option value="@user.Id" selected="@(Model.AssignedTo == user.Id)">@user.FullName</option> }</select><span asp-validation-for="AssignedTo" class="text-danger"></span></div>
+    }
+</div>

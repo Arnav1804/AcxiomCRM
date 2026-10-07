@@ -1,0 +1,4 @@
+@model List<AxciomCRM.ViewModels.PermissionViewModel>
+@{ ViewData["Title"] = "Permissions"; }
+<h1>Permissions</h1>
+<table class="table table-bordered"><thead><tr><th>Role</th><th>Access</th></tr></thead><tbody>@foreach (var permission in Model) { <tr><td>@permission.Role</td><td>@permission.Access</td></tr> }</tbody></table>
